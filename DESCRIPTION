@@ -1,0 +1,18 @@
+Package: successr
+Type: Package
+Title: Work with Successor Algorithms
+Version: 0.1.0
+Author: Jae-Young Son
+Maintainer: Jae-Young Son <jae@brown.edu>
+Description: Tidy-friendly tools for working with the Successor Features (SF)
+    algorithm in reinforcement learning (RL), including the popular special
+    case of the Successor Representation (SR).
+License: MIT license
+URL: https://github.com/psychNerdJae/successr
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    dplyr,
+    tidyr,
+    igraph,
+    tidygraph
