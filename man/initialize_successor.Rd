@@ -15,16 +15,16 @@ or undirected, as you'd like it.}
 \item{initialize_with}{A scalar. Defaults to `0`.}
 }
 \value{
-A tibble containing as many observations as there are cells in an
-    NxN matrix, where N=number of nodes. The column `successor_value`
-    encodes whatever initialized successor value is choosen.
+A square NxN matrix, where N=number of nodes.
 }
 \description{
 The successor counts must be initialized to some value. All things equal,
 the value `0` tends to be pretty good.
 }
 \examples{
-karate <- tidygraph::as_tbl_graph(successr::karate, directed = F)
-initialize_successor(karate)
+`\%>\%` <- magrittr::`\%>\%`
+successr::karate \%>\%
+    tidygraph::as_tbl_graph(directed = F) \%>\%
+    initialize_successor()
 
 }
