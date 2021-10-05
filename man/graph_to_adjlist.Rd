@@ -27,7 +27,9 @@ a full list of all possible pairwise relationships.
 Beware combinatorical explosion for large graphs.
 }
 \examples{
-karate <- tidygraph::as_tbl_graph(successr::karate, directed = F)
-graph_to_adjlist(karate)
+`\%>\%` <- magrittr::`\%>\%`
+successr::karate \%>\%
+    tidygraph::as_tbl_graph(directed = F) \%>\%
+    graph_to_adjlist()
 
 }

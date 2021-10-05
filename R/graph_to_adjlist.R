@@ -25,8 +25,10 @@
 #' @export
 #'
 #' @examples
-#' karate <- tidygraph::as_tbl_graph(successr::karate, directed = F)
-#' graph_to_adjlist(karate)
+#' `%>%` <- magrittr::`%>%`
+#' successr::karate %>%
+#'     tidygraph::as_tbl_graph(directed = F) %>%
+#'     graph_to_adjlist()
 #'
 graph_to_adjlist <- function(input_tidygraph) {
 
@@ -54,13 +56,13 @@ graph_to_adjlist <- function(input_tidygraph) {
   }
 
   # Create a dataframe with all possible pairwise relations
-  output_df <- expand_grid(from = 1:vcount(input_tidygraph),
-                           to = 1:vcount(input_tidygraph)) %>%
+  output <- expand_grid(from = 1:vcount(input_tidygraph),
+                        to = 1:vcount(input_tidygraph)) %>%
     # Add info about what edges exist in the network
     left_join(edgelist, by = c("from", "to")) %>%
     # Mark "missing" edges as non-existent edges
     mutate(edge = replace_na(edge, 0))
 
-  return (output_df)
+  return (output)
 }
 
