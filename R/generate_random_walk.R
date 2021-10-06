@@ -14,11 +14,6 @@
 #' @param start_here Numeric node ID. By default, picks a random starting point.
 #' @return A tibble containing all observations.
 #'
-#' @import dplyr
-#' @import tidyr
-#' @import igraph
-#' @import tidygraph
-#' @importFrom tibble enframe
 #' @export
 #'
 #' @examples

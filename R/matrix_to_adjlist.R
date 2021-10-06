@@ -13,11 +13,6 @@
 #'     combination of two nodes (`from` and `to`), and a column encoding the
 #'     relationship between them.
 #'
-#' @import dplyr
-#' @import tidyr
-#' @import igraph
-#' @import tidygraph
-#' @importFrom stringr str_remove
 #' @export
 #'
 #' @examples
@@ -36,7 +31,7 @@ matrix_to_adjlist <- function(input_matrix, edge_col_name = "edge") {
     pivot_longer(cols = -from,
                  names_to = "to",
                  values_to = edge_col_name) %>%
-    mutate(to = stringr::str_remove(to, "V"),
+    mutate(to = str_remove(to, "V"),
            to = as.numeric(to))
 
   return (output)

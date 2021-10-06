@@ -10,10 +10,6 @@
 #'     `edge` encodes whether there is a relationship between them.
 #' @return A square NxN matrix, where N=number of nodes.
 #'
-#' @import dplyr
-#' @import tidyr
-#' @import igraph
-#' @import tidygraph
 #' @export
 #'
 #' @examples

@@ -12,10 +12,6 @@
 #' @param initialize_with A scalar. Defaults to `0`.
 #' @return A square NxN matrix, where N=number of nodes.
 #'
-#' @import dplyr
-#' @import tidyr
-#' @import igraph
-#' @import tidygraph
 #' @export
 #'
 #' @examples

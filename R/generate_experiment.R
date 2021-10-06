@@ -11,10 +11,6 @@
 #'     or undirected, as you'd like it.
 #' @param n_reps Number of repetitions.
 #'
-#' @import dplyr
-#' @import tidyr
-#' @import igraph
-#' @import tidygraph
 #' @export
 #'
 #' @examples

@@ -18,10 +18,6 @@
 #' @return A tibble containing as many observations as there are cells in an
 #'     NxN matrix, where N=number of nodes.
 #'
-#' @import dplyr
-#' @import tidyr
-#' @import igraph
-#' @import tidygraph
 #' @export
 #'
 #' @examples

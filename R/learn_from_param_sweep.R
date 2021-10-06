@@ -9,19 +9,48 @@
 #' To update successor values from a single set of parameters, use
 #' `learn_from_observations` instead.
 #'
+#' Upon seeing a transition from \eqn{i} to \eqn{j}, the update equation for the
+#' successor matrix \eqn{M} is \eqn{M(i) <- M(i) + \alpha \delta}, where
+#' \eqn{\delta = onehot(i, j) + \gamma M(j) - M(i)}.
+#'
+#' Technically, \eqn{M} should be indexed like a matrix. But for simplicity,
+#' I write it like a single-input function that returns the associated row.
+#' Therefore, the successor algorithm updates values in a row-wise manner.
+#'
+#' The one-hot term is a vector the length of \eqn{M(i)}, which is filled with
+#' zeros except for a single one (\eqn{1}) at the location \eqn{j}. Hence, the
+#' one-hot vector encodes that when the agent was in state \eqn{i}, the next
+#' observed state was \eqn{j}.
+#'
+#' Where does the "successor" part of "successor representation/features" come
+#' from? That's a reference to the middle part of the update equation. When you
+#' encode the relationship between \eqn{i, j}, that's entirely accounted for by
+#' the one-hot vector. But, you may want to also encode longer-range relations,
+#' such that your representation of \eqn{i} not only includes the relationship
+#' with \eqn{j}, but also the relationship between \eqn{j, k}. Therefore, you
+#' will end up with larger successor values for direct connections, and smaller
+#' values for indirect (e.g., long-range) connections.
+#'
+#' The learning rate \eqn{\alpha} tempers how strongly the one-hot updates
+#' the learned successor values. The lookahead horizon \eqn{\gamma} dictates
+#' how strongly the successor state's relations are incorporated into the
+#' update.
+#'
 #' @param successor_matrix A square matrix created by `initialize_successor`.
 #' @param observations A tibble with observations `from` a node `to` another.
-#' @param alphas Vector corresponding to the learning rate bound in [0, 1].
-#' @param gammas Vector corresponding to the lookaround horizon bound in [0, 1).
+#' @param alphas Vector. Learning rate bound in [0, 1].
+#' @param gammas Vector. Lookaround horizon bound in [0, 1).
 #' @param bidirectional Logical. Defaults to `FALSE`, which means that only
 #'     the `from-to` relationship gets updated. If set to `TRUE`, this function
 #'     will also update the `to-from` relationship.
-#' @return A dataframe with updated successor values, given the observations.
+#' @param edge_col_name The name of the column encoding the relation between
+#'     two given nodes. By default, this is set to `successor_value`.
+#' @return A tibble with NxN observations for each combination of parameters,
+#'     such that every row is a pairwise combination of two nodes
+#'     (`from` and `to`). Includes a column encoding the successor value
+#'     between each pair of nodes, and columns indicating what alpha/gamma
+#'     values were used to compute successor values.
 #'
-#' @import dplyr
-#' @import tidyr
-#' @import igraph
-#' @import tidygraph
 #' @export
 #'
 #' @examples
@@ -37,7 +66,8 @@
 learn_from_param_sweep <- function(successor_matrix,
                                    observations,
                                    alphas, gammas,
-                                   bidirectional = FALSE) {
+                                   bidirectional = FALSE,
+                                   edge_col_name = "successor_value") {
 
   for (this_alpha in alphas) {
     for (this_gamma in gammas) {
@@ -45,8 +75,8 @@ learn_from_param_sweep <- function(successor_matrix,
       this_sr <- successor_matrix %>%
         learn_from_observations(observations,
                                 this_alpha, this_gamma,
-                                bidirectional) %>%
-        matrix_to_adjlist() %>%
+                                bidirectional,
+                                edge_col_name) %>%
         mutate(alpha = this_alpha,
                gamma = this_gamma)
 
