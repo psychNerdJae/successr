@@ -23,3 +23,7 @@ Imports:
     igraph,
     tidygraph
 RoxygenNote: 7.1.2
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr
