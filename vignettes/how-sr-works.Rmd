@@ -68,7 +68,7 @@ Let's illustrate using a real network:
 ```{r}
 # Load network
 karate_network <- karate %>%
-  as_tbl_graph(directed = FALSE)
+  tbl_graph(edges = ., directed = FALSE)
 
 # Simulate random walk through network (observations)
 karate_walk <- karate_network %>%
