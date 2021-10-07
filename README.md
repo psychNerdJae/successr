@@ -19,7 +19,10 @@ As of now, this package is very much still in development mode. Please don't hes
 ```
 # Install straight from GitHub
 # install.packages("devtools")
-devtools::install_github("psychNerdJae/successr")
+devtools::install_github("psychNerdJae/successr", build_vignettes = TRUE)
+
+# Want to learn more about the ideas and math? Read the vignette!
+RShowDoc("how-sr-works", "html", "successr")
 ```
 
 ## Example

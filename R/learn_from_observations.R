@@ -65,9 +65,12 @@ learn_from_observations <- function(successor_matrix,
                                     bidirectional = FALSE,
                                     edge_col_name = "successor_value") {
 
+  obs_matrix <- as.matrix(select(observations, from, to))
+
   for (j in 1:nrow(observations)) {
-    previous_state <- observations %>% slice(j) %>% pluck("from")
-    current_state <- observations %>% slice(j) %>% pluck("to")
+
+    previous_state <- obs_matrix[j, 1]
+    current_state <- obs_matrix[j, 2]
 
     successor_matrix <- successor_matrix %>%
       update_successor(input_alpha, input_gamma,

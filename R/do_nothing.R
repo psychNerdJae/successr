@@ -12,7 +12,6 @@
 #' @import dplyr
 #' @import tidyr
 #' @importFrom tibble enframe
-#' @importFrom purrr pluck
 #' @importFrom stringr str_remove
 #' @importFrom igraph vcount random_walk as_ids
 #' @importFrom tidygraph activate as_tibble with_graph graph_is_directed
