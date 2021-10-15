@@ -19,7 +19,7 @@
 #'     tidygraph::as_tbl_graph(directed = F) %>%
 #'     generate_experiment(2)
 #'
-generate_random_walk <- function(input_tidygraph, n_reps) {
+generate_experiment <- function(input_tidygraph, n_reps) {
 
   # Get the edgelist
   edgelist <- input_tidygraph %>%

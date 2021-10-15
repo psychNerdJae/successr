@@ -2,10 +2,9 @@
 % Please edit documentation in R/generate_experiment.R
 \name{generate_experiment}
 \alias{generate_experiment}
-\alias{generate_random_walk}
 \title{Simulate a basic experiment}
 \usage{
-generate_random_walk(input_tidygraph, n_obs, start_here = NULL)
+generate_experiment(input_tidygraph, n_reps)
 }
 \arguments{
 \item{input_tidygraph}{A `tbl_graph` representation from `tidygraph`.
