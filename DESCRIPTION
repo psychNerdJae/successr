@@ -1,9 +1,12 @@
 Package: successr
 Type: Package
-Title: Work with Successor Algorithms
-Version: 0.0.0.9003
-Author: Jae-Young Son
-Maintainer: Jae-Young Son <jae@brown.edu>
+Title: Tools for Working with Successor Features
+Version: 1.0
+Authors@R: person(
+    "Jae-Young", "Son",
+    email = "jae@brown.edu",
+    role = c("cre", "aut"),
+    comment = c(ORCID = "0000-0002-3852-1237"))
 Description: Tidy-friendly tools for working with the Successor Features (SF)
     algorithm in reinforcement learning (RL), including the popular special
     case of the Successor Representation (SR).
@@ -18,11 +21,13 @@ Imports:
     dplyr,
     tidyr,
     tibble,
-    stringr,
-    igraph,
-    tidygraph
+    stringr
 RoxygenNote: 7.1.2
 Suggests: 
     rmarkdown,
-    knitr
+    knitr,
+    testthat (>= 3.0.0),
+    igraph,
+    tidygraph
 VignetteBuilder: knitr
+Config/testthat/edition: 3
