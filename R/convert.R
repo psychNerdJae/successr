@@ -45,14 +45,14 @@ convert_graph_to_matrix <- function(input) {
     )
   }
 
-  if (class(input) != "tbl_graph") {
+  if (all(class(input) != "tbl_graph")) {
     stop("Input is not `tbl_graph`")
   }
 
   return (
     input %>%
-      convert_graph_to_adjlist() %>%
-      convert_adjlist_to_matrix()
+      convert_graph_to_adjlist(edge) %>%
+      convert_adjlist_to_matrix(edge)
   )
 }
 
@@ -66,7 +66,7 @@ convert_graph_to_adjlist <- function(input, relation_value_col) {
     )
   }
 
-  if (class(input) != "tbl_graph") {
+  if (all(class(input) != "tbl_graph")) {
     stop("Input is not `tbl_graph`")
   }
 
@@ -104,7 +104,7 @@ convert_graph_to_adjlist <- function(input, relation_value_col) {
     # Mark "missing" edges as non-existent edges
     mutate(edge = replace_na(edge, 0)) %>%
     # Rename the "edge" column whatever the user wants
-    rename(relation_value_col := edge)
+    rename({{relation_value_col}} := edge)
 
   return (output)
 }
