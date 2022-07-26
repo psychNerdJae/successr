@@ -31,6 +31,10 @@
 #'
 #' @param input Depending on the function, a permissible input could be a
 #' matrix, dataframe/tibble, or `tidygraph::tbl_graph`.
+#' @param relation_value_col The name of the column that encodes (or will
+#' encode) the strength of relationship between two nodes. For example, in an
+#' adjacency representation, this might be zeroes (not friends) and ones
+#' (yes friends).
 #'
 #' @export
 convert_graph_to_matrix <- function(input) {
