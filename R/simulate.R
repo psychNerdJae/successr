@@ -1,13 +1,15 @@
 #' @title Simulate observations from a network
 #'
 #' @description
-#' Generate N pairwise observations of each relationship, like in a (balanced)
-#' laboratory experiment.
+#' `simulate_pairwise`: Generate N pairwise observations of each relationship,
+#' like in a (balanced) laboratory experiment.
+#' `simulate_random_walk`: Generate a random walk of N length.
 #'
-#' @param input Formatted either as `tidygraph::tbl_graph`, OR an adjlist. This
-#' function will not work with other kinds of network representations, e.g. from
-#' `igraph`. Make sure that your input graph is either directed or undirected,
-#' as you'd like it.
+#' @param input For `simulate_pairwise`, this can be formatted either as a
+#' `tidygraph::tbl_graph`, OR an adjlist. For `simulate_random_walk`, you can
+#' only use `tidygraph::tbl_graph`. This function will not work with other kinds
+#' of network representations, e.g. from `igraph`. Make sure that your input
+#' graph is either directed or undirected, as you'd like it.
 #' @param n_reps Number of repetitions.
 #' @param relation_value_col The name of the column that encodes (or will
 #' encode) the strength of relationship between two nodes. For example, in an
@@ -16,13 +18,11 @@
 #' @param start_here In the random walk, the starting node's numeric ID.
 #'
 #' @examples
-#' `%>%` <- magrittr::`%>%`
-#' successr::karate %>%
-#'     tidygraph::as_tbl_graph(directed = F) %>%
-#'     generate_experiment(2)
+#' karate_graph <- tidygraph::tbl_graph(edges = successr::karate, directed = F)
+#' karate_obs <- karate_graph %>% successr::simulate_experiment(1000)
 
 #' @export
-simulate_pairwise <- function(input, n_reps, relation_value_col=NA) {
+simulate_pairwise <- function(input, n_reps, relation_value_col=NULL) {
 
   # Get the edgelist
   if (any(class(input) == "tbl_graph")) {

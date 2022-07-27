@@ -16,7 +16,7 @@
 #' @examples
 #' `%>%` <- magrittr::`%>%`
 #' tidygraph::tbl_graph(edges = successr::karate, directed = F) %>%
-#'   initialize_successor()
+#'   successr::initialize_successor()
 #'
 initialize_successor <- function(input, initialize_with = 0) {
 

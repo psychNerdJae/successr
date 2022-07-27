@@ -4,15 +4,15 @@
 \alias{initialize_successor}
 \title{Initialize successor values}
 \usage{
-initialize_successor(input_tidygraph, initialize_with = 0)
+initialize_successor(input, initialize_with = 0)
 }
 \arguments{
-\item{input_tidygraph}{A `tbl_graph` representation from `tidygraph`.
-This function will not work with other kinds of network representations,
-e.g. from `igraph`. Make sure that your input graph is either directed
-or undirected, as you'd like it.}
+\item{input}{Formatted either as `tidygraph::tbl_graph`, OR a scalar with
+the number of nodes. This function will not work with other kinds of network
+representations, e.g. from `igraph`. Make sure that your input graph is
+either directed or undirected, as you'd like it.}
 
-\item{initialize_with}{A scalar. Defaults to `0`.}
+\item{initialize_with}{Scalar, defaults to `0`.}
 }
 \value{
 A square NxN matrix, where N=number of nodes.
@@ -23,8 +23,7 @@ the value `0` tends to be pretty good.
 }
 \examples{
 `\%>\%` <- magrittr::`\%>\%`
-successr::karate \%>\%
-    tidygraph::as_tbl_graph(directed = F) \%>\%
-    initialize_successor()
+tidygraph::tbl_graph(edges = successr::karate, directed = F) \%>\%
+  successr::initialize_successor()
 
 }

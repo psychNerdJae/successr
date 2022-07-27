@@ -32,7 +32,12 @@
 #' update.
 #'
 #' @examples
-#' TODO
+#' `%>%` <- magrittr::`%>%`
+#' karate_graph <- tidygraph::tbl_graph(edges = successr::karate, directed = F)
+#' karate_obs <- karate_graph %>% successr::simulate_experiment(1000)
+#' karate_graph %>%
+#'   successr::initialize_successor() %>%
+#'   successr::learn_successor(karate_obs, sr, c(0.1, 0.2), c(0, 0.8), TRUE)
 #'
 #' @param input Square NxN matrix
 #' @param observations Dataframe with columns `from` and `to`

@@ -16,7 +16,7 @@ As of now, this package is very much still in development mode. Please don't hes
 
 ## Installation
 
-```
+```R
 # Install straight from GitHub
 # install.packages("devtools")
 devtools::install_github("psychNerdJae/successr", build_vignettes = TRUE)
@@ -27,7 +27,7 @@ RShowDoc("how-sr-works", "html", "successr")
 
 ## Example
 
-```
+```R
 library(tidyverse)
 library(tidygraph)
 library(successr)

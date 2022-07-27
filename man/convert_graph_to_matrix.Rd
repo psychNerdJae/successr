@@ -48,9 +48,7 @@ plotting, and motivates `convert_graph_to_adjlist` and
 }
 \examples{
 `\%>\%` <- magrittr::`\%>\%`
-# Create a graph, then convert into matrix
-successr::karate \%>\%
-  tidygraph::tbl_graph(edges = ., directed = F) \%>\%
+tidygraph::tbl_graph(edges = successr::karate, directed = F) \%>\%
   successr::convert_graph_to_matrix()
 
 }
