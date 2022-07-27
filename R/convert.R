@@ -24,9 +24,7 @@
 #'
 #' @examples
 #' `%>%` <- magrittr::`%>%`
-#' # Create a graph, then convert into matrix
-#' successr::karate %>%
-#'   tidygraph::tbl_graph(edges = ., directed = F) %>%
+#' tidygraph::tbl_graph(edges = successr::karate, directed = F) %>%
 #'   successr::convert_graph_to_matrix()
 #'
 #' @param input Depending on the function, a permissible input could be a
