@@ -78,31 +78,31 @@ convert_graph_to_adjlist <- function(input, relation_value_col) {
   edgelist <- input %>%
     tidygraph::activate("edges") %>%
     tidygraph::as_tibble() %>%
-    select(from, to) %>%
-    mutate(edge = 1)
+    dplyr::select(from, to) %>%
+    dplyr::mutate(edge = 1)
 
   # Make symmetric if network is undirected
   if (!directed_graph) {
-    edgelist <- bind_rows(
+    edgelist <- dplyr::bind_rows(
       # Original
       edgelist,
       # Flipped
-      edgelist %>% select(from = to, to = from, edge)
+      edgelist %>% dplyr::select(from = to, to = from, edge)
     )
   }
 
   # Create a dataframe with all possible pairwise relations
   n_nodes <- igraph::vcount(input)
-  output <- expand_grid(
+  output <- tidyr::expand_grid(
     from = 1:n_nodes,
     to = 1:n_nodes
   ) %>%
     # Add info about what edges exist in the network
-    left_join(edgelist, by = c("from", "to")) %>%
+    dplyr::left_join(edgelist, by = c("from", "to")) %>%
     # Mark "missing" edges as non-existent edges
-    mutate(edge = replace_na(edge, 0)) %>%
+    dplyr::mutate(edge = tidyr::replace_na(edge, 0)) %>%
     # Rename the "edge" column whatever the user wants
-    rename({{relation_value_col}} := edge)
+    dplyr::rename({{relation_value_col}} := edge)
 
   return (output)
 }
@@ -128,11 +128,11 @@ convert_adjlist_to_matrix <- function(input, relation_value_col) {
   }
 
   if (
-    input %>%
-    select({{relation_value_col}}) %>%
-    tibble::deframe() %>%
-    class()
-    != "numeric"
+    class(
+      input %>%
+      dplyr::select({{relation_value_col}}) %>%
+      tibble::deframe()
+    ) != "numeric"
   ) {
     stop("Your relation value column contains non-numbers.")
   }
@@ -145,13 +145,13 @@ convert_adjlist_to_matrix <- function(input, relation_value_col) {
 
   return (
     input %>%
-      select(from, to, {{relation_value_col}}) %>%
-      arrange(from, to) %>%
-      pivot_wider(
+      dplyr::select(from, to, {{relation_value_col}}) %>%
+      dplyr::arrange(from, to) %>%
+      tidyr::pivot_wider(
         names_from = to,
         values_from = {{relation_value_col}}
       ) %>%
-      select(-from) %>%
+      dplyr::select(-from) %>%
       as.matrix() %>%
       unname()
   )
@@ -168,13 +168,13 @@ convert_matrix_to_adjlist <- function(input, relation_value_col) {
   return (
     input %>%
       as.data.frame() %>%
-      mutate(from = row_number()) %>%
-      pivot_longer(
+      dplyr::mutate(from = dplyr::row_number()) %>%
+      tidyr::pivot_longer(
         cols = -from,
         names_to = "to",
         values_to = user_col_to_string({{relation_value_col}})
       ) %>%
-      mutate(
+      dplyr::mutate(
         to = stringr::str_remove(to, "V"),
         to = as.numeric(to)
       )

@@ -29,7 +29,7 @@ simulate_pairwise <- function(input, n_reps, relation_value_col=NULL) {
     edgelist <- input %>%
       tidygraph::activate("edges") %>%
       tidygraph::as_tibble() %>%
-      select(from, to)
+      dplyr::select(from, to)
   } else if (!any(class(input) %in% class(tibble()))) {
     stop("Input is not `data.frame`-like")
   } else {
@@ -43,12 +43,12 @@ simulate_pairwise <- function(input, n_reps, relation_value_col=NULL) {
     }
 
     if (!any(these_cols == user_col_to_string({{relation_value_col}}))) {
-      stop("Your dataframe does not contain the specified relation value column.")
+      stop("Your dataframe does not contain that relation value column.")
     }
 
     if (
       input %>%
-      select({{relation_value_col}}) %>%
+      dplyr::select({{relation_value_col}}) %>%
       tibble::deframe() %>%
       class()
       != "numeric"
@@ -63,17 +63,17 @@ simulate_pairwise <- function(input, n_reps, relation_value_col=NULL) {
     }
 
     edgelist <- input %>%
-      filter({{relation_value_col}} != 0) %>%
-      filter(from < to) %>%
-      select(from, to)
+      dplyr::filter({{relation_value_col}} != 0) %>%
+      dplyr::filter(from < to) %>%
+      dplyr::select(from, to)
   }
 
   # Repeat N times
   return (
-    expand_grid(rep = 1:n_reps, edgelist) %>%
-      group_by(rep) %>%
-      slice_sample(prop = 1) %>%
-      ungroup()
+    tidyr::expand_grid(rep = 1:n_reps, edgelist) %>%
+      dplyr::group_by(rep) %>%
+      dplyr::slice_sample(prop = 1) %>%
+      dplyr::ungroup()
   )
 }
 
@@ -109,7 +109,7 @@ simulate_random_walk <- function(input, n_obs, start_here = NULL) {
   return (
     this_walk %>%
       tibble::enframe(name = NULL, value = "from") %>%
-      mutate(to = lead(from)) %>%
-      drop_na()
+      dplyr::mutate(to = dplyr::lead(from)) %>%
+      tidyr::drop_na()
   )
 }

@@ -4,8 +4,7 @@
 #' Utility functions for developer convenience, not intended for users.
 #' Also allows for NAMESPACE imports to be collected in one place.
 #' Should not be exported.
-#' @import dplyr
-#' @import tidyr
+#' @importFrom magrittr `%>%`
 
 user_col_to_string <- function(user_col_in_double_brackets) {
   # If this function (f1) is used inside another function (f2), and is meant to

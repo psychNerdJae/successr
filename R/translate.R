@@ -65,7 +65,7 @@ translate_counts_to_probabilities <- function(
 
   if (is.data.frame(input)) {
     output <- input %>%
-      mutate(
+      dplyr::mutate(
         {{relation_value_col}} :=
           {{relation_value_col}} * (1 - {{successor_horizon_col}})
       )
@@ -89,7 +89,7 @@ translate_probabilities_to_counts <- function(
 
   if (is.data.frame(input)) {
     output <- input %>%
-      mutate(
+      dplyr::mutate(
         {{relation_value_col}} :=
           {{relation_value_col}} * (1 / (1 - {{successor_horizon_col}}))
       )

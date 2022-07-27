@@ -139,7 +139,7 @@ learn_from_multiple_obs <- function(
     stop("`observations` does not contain the columns `from` and `to`.")
   }
 
-  obs_matrix <- as.matrix(select(observations, from, to))
+  obs_matrix <- as.matrix(dplyr::select(observations, from, to))
 
   for (j in 1:nrow(observations)) {
 
@@ -157,7 +157,7 @@ learn_from_multiple_obs <- function(
 
   output <- input %>%
     convert_matrix_to_adjlist({{relation_value_col}}) %>%
-    mutate(
+    dplyr::mutate(
       learning_rate = learning_rate,
       successor_horizon = successor_horizon
     )
@@ -188,14 +188,14 @@ learn_successor <- function(
         learning_rate, successor_horizon,
         bidirectional
       ) %>%
-        mutate(
+        dplyr::mutate(
           learning_rate = learning_rate,
           successor_horizon = successor_horizon
         )
 
       # Return one giant dataframe for all combinations of parameter values
       if (exists("output") && is.data.frame(get("output"))) {
-        output <- add_row(output, this_successor)
+        output <- dplyr::add_row(output, this_successor)
       } else {
         output <- this_successor
       }
