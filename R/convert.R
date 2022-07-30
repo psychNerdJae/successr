@@ -110,7 +110,7 @@ convert_graph_to_adjlist <- function(input, relation_value_col) {
 #' @export
 #' @rdname convert_graph_to_matrix
 convert_adjlist_to_matrix <- function(input, relation_value_col) {
-  if (!any(class(input) %in% class(tibble()))) {
+  if (!any(class(input) %in% class(dplyr::tibble()))) {
     stop("Input is not `data.frame`-like")
   }
 

@@ -130,7 +130,7 @@ learn_from_multiple_obs <- function(
     stop("`input` must be provided as a square matrix.")
   }
 
-  if (!any(class(observations) %in% class(tibble()))) {
+  if (!any(class(observations) %in% class(dplyr::tibble()))) {
     stop("`observations` must be a dataframe with columns `from` and `to`.")
   }
 
