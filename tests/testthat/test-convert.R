@@ -1,11 +1,3 @@
-test_input <- tribble(
-  ~from, ~to, ~edge,
-  1, 1, 0,
-  2, 2, 3,
-  2, 1, 1,
-  1, 2, 2,
-)
-
 test_that(
   "`convert_adjlist_to_matrix` fails if dataframe is not given",
   {
@@ -23,7 +15,7 @@ test_that(
   {
     expect_error(
       convert_adjlist_to_matrix(
-        test_input %>% select(-from),
+        for_testing_convert %>% dplyr::select(-from),
         edge
       )
     )
@@ -35,7 +27,7 @@ test_that(
   {
     expect_error(
       convert_adjlist_to_matrix(
-        test_input %>% select(-to),
+        for_testing_convert %>% dplyr::select(-to),
         edge
       )
     )
@@ -47,7 +39,7 @@ test_that(
   {
     expect_error(
       convert_adjlist_to_matrix(
-        test_input %>% mutate(from = as.character(from)),
+        for_testing_convert %>% dplyr::mutate(from = as.character(from)),
         edge
       )
     )
@@ -59,7 +51,7 @@ test_that(
   {
     expect_error(
       convert_adjlist_to_matrix(
-        test_input %>% mutate(to = as.character(to)),
+        for_testing_convert %>% dplyr::mutate(to = as.character(to)),
         edge
       )
     )
@@ -71,7 +63,7 @@ test_that(
   {
     expect_error(
       convert_adjlist_to_matrix(
-        test_input,
+        for_testing_convert,
         asdf
       )
     )
@@ -83,7 +75,7 @@ test_that(
   {
     expect_error(
       convert_adjlist_to_matrix(
-        test_input %>% mutate(edge = as.character(edge)),
+        for_testing_convert %>% dplyr::mutate(edge = as.character(edge)),
         edge
       )
     )
@@ -95,7 +87,7 @@ test_that(
   {
     expect_error(
       convert_adjlist_to_matrix(
-        test_input %>% filter(from != to),
+        for_testing_convert %>% dplyr::filter(from != to),
         edge
       )
     )
@@ -106,10 +98,10 @@ test_that(
   "`convert_matrix_to_adjlist` returns the correct adjlist",
   {
     expect_equal(
-      object = test_input %>%
+      object = for_testing_convert %>%
         convert_adjlist_to_matrix(edge) %>%
         convert_matrix_to_adjlist(edge),
-      expected = tribble(
+      expected = dplyr::tribble(
         ~from, ~to, ~edge,
         1, 1, 0,
         1, 2, 2,
