@@ -39,13 +39,13 @@ Okay, what about that weird stuff in the middle of $\delta$? That is where the m
 
 # SR predictive horizion
 
-Therefore, with greater values of $\gamma$, the representation has a longer "lookahead" horizon, as illustrated [here](https://bair.berkeley.edu/blog/2021/01/05/successor/).
+Therefore, with greater values of $\gamma$, the representation has a longer "lookahead" horizon, [as illustrated here](https://bair.berkeley.edu/blog/2021/01/05/successor/).
 
 This means that if we know $\gamma$, we know exactly how many lookahead steps the SR is taking into the future, using the formula: $lookahead = \frac{1}{1 - \gamma}$. We'll note that the lookahead horizon does not increase linearly with $\gamma$.
 
 ```{r}
 tibble(gamma = seq(0, 0.9, 0.1)) %>%
-  mutate(lookahead = 1 / (1 - gamma)) %>%
+  mutate(lookahead = translate_gamma_to_lookahead(gamma)) %>%
   kable()
 ```
 
@@ -53,7 +53,7 @@ Using algebraic rearrangement, we can also compute what value of $\gamma$ is req
 
 ```{r}
 tibble(lookahead = 1:10) %>%
-  mutate(gamma = 1 - (1 / lookahead)) %>%
+  mutate(gamma = translate_lookahead_to_gamma(lookahead)) %>%
   kable()
 ```
 
