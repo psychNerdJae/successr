@@ -11,4 +11,5 @@
 #'   ...
 #' }
 #' @source \url{https://www.rdocumentation.org/packages/igraphdata/versions/1.0.1/topics/karate}
-"karate"
+"karate_numeric"
+"karate_named"

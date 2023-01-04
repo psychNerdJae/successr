@@ -45,10 +45,14 @@ record of all possible relations (i.e., such that there are as many dataframe
 observations as there are matrix cells). This tidy format is useful for
 plotting, and motivates `convert_graph_to_adjlist` and
 `convert_matrix_to_adjlist`.
+
+Note! If you have a named matrix, graph, or adjlist, these functions will
+not return named outputs. If this is important to you, use a nodelist to
+(later) recover names from numeric IDs.
 }
 \examples{
 `\%>\%` <- magrittr::`\%>\%`
-tidygraph::tbl_graph(edges = successr::karate, directed = F) \%>\%
+tidygraph::tbl_graph(edges = successr::karate_named, directed = F) \%>\%
   successr::convert_graph_to_matrix()
 
 }

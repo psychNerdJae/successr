@@ -4,7 +4,7 @@
 \alias{initialize_successor}
 \title{Initialize successor values}
 \usage{
-initialize_successor(input, initialize_with = 0)
+initialize_successor(input, successor_horizon = 0)
 }
 \arguments{
 \item{input}{Formatted either as `tidygraph::tbl_graph`, OR a scalar with
@@ -12,18 +12,23 @@ the number of nodes. This function will not work with other kinds of network
 representations, e.g. from `igraph`. Make sure that your input graph is
 either directed or undirected, as you'd like it.}
 
-\item{initialize_with}{Scalar, defaults to `0`.}
+\item{successor_horizon}{Scalar in range [0, 1), defaults to `0`.}
 }
 \value{
 A square NxN matrix, where N=number of nodes.
 }
 \description{
 The successor counts must be initialized to some value. All things equal,
-the value `0` tends to be pretty good.
+an identity matrix is a reasonable choice. Depending on the successor
+horizon at which the agent learns, the expected count should theoretically
+be scaled. However, a common use case of this library is to estimate
+multiple successor horizons, in which case this is unfeasible. In these
+situations, it probably makes a negligible difference (given sufficient
+learning observations) to simply use an unscaled identity matrix.
 }
 \examples{
 `\%>\%` <- magrittr::`\%>\%`
-tidygraph::tbl_graph(edges = successr::karate, directed = F) \%>\%
+tidygraph::tbl_graph(edges = successr::karate_named, directed = F) \%>\%
   successr::initialize_successor()
 
 }

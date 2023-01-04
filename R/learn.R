@@ -33,11 +33,11 @@
 #'
 #' @examples
 #' `%>%` <- magrittr::`%>%`
-#' karate_graph <- tidygraph::tbl_graph(edges = successr::karate, directed = F)
-#' karate_obs <- karate_graph %>% successr::simulate_experiment(1000)
-#' karate_graph %>%
+#' g <- tidygraph::tbl_graph(edges = successr::karate_named, directed = F)
+#' obs <- g %>% successr::simulate_experiment(1000)
+#' g %>%
 #'   successr::initialize_successor() %>%
-#'   successr::learn_successor(karate_obs, sr, c(0.1, 0.2), c(0, 0.8), TRUE)
+#'   successr::learn_successor(obs, sr, c(0.1, 0.2), c(0, 0.8), TRUE)
 #'
 #' @param input Square NxN matrix
 #' @param observations Dataframe with columns `from` and `to`
@@ -178,29 +178,21 @@ learn_successor <- function(
     stop("Learning rates and successor horizons must be numeric.")
   }
 
-  for (learning_rate in learning_rates) {
-    for (successor_horizon in successor_horizons) {
-      # Update successor values for one combination of parameter values
-      this_successor <- learn_from_multiple_obs(
-        input,
-        observations,
-        {{relation_value_col}},
-        learning_rate, successor_horizon,
-        bidirectional
-      ) %>%
-        dplyr::mutate(
-          learning_rate = learning_rate,
-          successor_horizon = successor_horizon
-        )
-
-      # Return one giant dataframe for all combinations of parameter values
-      if (exists("output") && is.data.frame(get("output"))) {
-        output <- dplyr::add_row(output, this_successor)
-      } else {
-        output <- this_successor
-      }
-    }
-  }
+  output <- purrr::map2_dfr(
+    .x = learning_rates,
+    .y = successor_horizons,
+    .f = ~learn_from_multiple_obs(
+      input,
+      observations,
+      {{relation_value_col}},
+      .x, .y,
+      bidirectional
+    ) %>%
+      dplyr::mutate(
+        learning_rate = .x,
+        successor_horizon = .y
+      )
+  )
 
   return (output)
 }

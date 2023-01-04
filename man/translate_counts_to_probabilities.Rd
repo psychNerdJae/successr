@@ -61,11 +61,11 @@ Yes, it's that easy, but beware that your probabilities might not sum to one
 }
 \examples{
 `\%>\%` <- magrittr::`\%>\%`
-karate_graph <- tidygraph::tbl_graph(edges = successr::karate, directed = F)
-karate_obs <- karate_graph \%>\% successr::simulate_experiment(1000)
-karate_graph \%>\%
+g <- tidygraph::tbl_graph(edges = successr::karate_named, directed = F)
+obs <- g \%>\% successr::simulate_experiment(1000)
+g \%>\%
   successr::initialize_successor() \%>\%
-  successr::learn_successor(karate_obs, sr, c(0.1, 0.2), c(0, 0.8), TRUE) \%>\%
+  successr::learn_successor(obs, sr, c(0.1, 0.2), c(0, 0.8), TRUE) \%>\%
   successr::translate_counts_to_probabilities(
     relation_value_col = sr,
     successor_horizon_col = successor_horizon

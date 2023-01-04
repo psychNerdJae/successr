@@ -3,13 +3,12 @@
 #' @description
 #' `simulate_pairwise`: Generate N pairwise observations of each relationship,
 #' like in a (balanced) laboratory experiment.
-#' `simulate_random_walk`: Generate a random walk of N length.
+#' `simulate_walk`: Generate a random walk of N length.
 #'
 #' @param input For `simulate_pairwise`, this can be formatted either as a
-#' `tidygraph::tbl_graph`, OR an adjlist. For `simulate_random_walk`, you can
-#' only use `tidygraph::tbl_graph`. This function will not work with other kinds
-#' of network representations, e.g. from `igraph`. Make sure that your input
-#' graph is either directed or undirected, as you'd like it.
+#' `tidygraph::tbl_graph`, OR an adjlist. For `simulate_walk`, you can only
+#' use `tidygraph::tbl_graph` representations. Make sure your input graph is
+#' either directed or undirected, as you'd like it.
 #' @param n_reps Number of repetitions.
 #' @param relation_value_col The name of the column that encodes (or will
 #' encode) the strength of relationship between two nodes. For example, in an
@@ -18,11 +17,26 @@
 #' @param start_here In the random walk, the starting node's numeric ID.
 #'
 #' @examples
-#' karate_graph <- tidygraph::tbl_graph(edges = successr::karate, directed = F)
-#' karate_obs <- karate_graph %>% successr::simulate_experiment(1000)
+#' `%>%` <- magrittr::`%>%`
+#' tidygraph::tbl_graph(edges = successr::karate_named, directed = F) %>%
+#'   successr::simulate_pairwise(1000)
 
 #' @export
-simulate_pairwise <- function(input, n_reps, relation_value_col=NULL) {
+simulate_pairwise <- function(input, n_reps, relation_value_col = NULL) {
+
+  # Check input datatype
+  if (any(class(input) == "tbl_graph")) {
+    # Check whether tidygraph is required, and if so, whether it's installed
+    if (!requireNamespace("tidygraph", quietly = TRUE)) {
+      stop(
+        "Package \"tidygraph\" must be installed to use tbl_graph input.",
+        call. = FALSE
+      )
+    }
+  } else if (!any(class(input) %in% class(tibble()))) {
+    # Check whether the input is otherwise a dataframe
+    stop("Input is not `data.frame`-like")
+  }
 
   # Get the edgelist
   if (any(class(input) == "tbl_graph")) {
@@ -30,8 +44,6 @@ simulate_pairwise <- function(input, n_reps, relation_value_col=NULL) {
       tidygraph::activate("edges") %>%
       tidygraph::as_tibble() %>%
       dplyr::select(from, to)
-  } else if (!any(class(input) %in% class(tibble()))) {
-    stop("Input is not `data.frame`-like")
   } else {
     these_cols <- colnames(input)
     if (!any(these_cols == "from") | !any(these_cols == "to")) {
@@ -79,13 +91,27 @@ simulate_pairwise <- function(input, n_reps, relation_value_col=NULL) {
 
 #' @export
 #' @rdname simulate_pairwise
-simulate_random_walk <- function(input, n_obs, start_here = NULL) {
+simulate_walk <- function(input, n_obs, start_here = NULL) {
+
+  if (!requireNamespace("igraph", quietly = TRUE)) {
+    stop(
+      "Package \"igraph\" must be installed to use this function.",
+      call. = FALSE
+    )
+  }
 
   if (!requireNamespace("tidygraph", quietly = TRUE)) {
     stop(
       "Package \"tidygraph\" must be installed to use this function.",
       call. = FALSE
     )
+  }
+
+  # If the nodes are named, unname them
+  if (igraph::is_named(input)) {
+    input <- input %>%
+      tidygraph::activate(nodes) %>%
+      tidygraph::select(-name)
   }
 
   # Pick starting place at random
@@ -102,14 +128,13 @@ simulate_random_walk <- function(input, n_obs, start_here = NULL) {
     # so to get N observations, we need N+1 steps
     steps = n_obs + 1
   ) %>%
-    igraph::as_ids() %>%
-    as.numeric()
+    igraph::as_ids()
 
   # Parse into pairs
-  return (
-    this_walk %>%
-      tibble::enframe(name = NULL, value = "from") %>%
-      dplyr::mutate(to = dplyr::lead(from)) %>%
-      tidyr::drop_na()
-  )
+  output <- this_walk %>%
+    tibble::enframe(name = NULL, value = "from") %>%
+    dplyr::mutate(to = dplyr::lead(from)) %>%
+    tidyr::drop_na()
+
+  return (output)
 }

@@ -21,8 +21,8 @@ Imports:
     dplyr,
     tidyr,
     tibble,
-    stringr
-RoxygenNote: 7.1.2
+    purrr
+RoxygenNote: 7.2.2
 Suggests: 
     rmarkdown,
     knitr,

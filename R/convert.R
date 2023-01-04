@@ -22,9 +22,13 @@
 #' plotting, and motivates `convert_graph_to_adjlist` and
 #' `convert_matrix_to_adjlist`.
 #'
+#' Note! If you have a named matrix, graph, or adjlist, these functions will
+#' not return named outputs. If this is important to you, use a nodelist to
+#' (later) recover names from numeric IDs.
+#'
 #' @examples
 #' `%>%` <- magrittr::`%>%`
-#' tidygraph::tbl_graph(edges = successr::karate, directed = F) %>%
+#' tidygraph::tbl_graph(edges = successr::karate_named, directed = F) %>%
 #'   successr::convert_graph_to_matrix()
 #'
 #' @param input Depending on the function, a permissible input could be a
@@ -76,7 +80,7 @@ convert_graph_to_adjlist <- function(input, relation_value_col) {
 
   # Get the edgelist
   edgelist <- input %>%
-    tidygraph::activate("edges") %>%
+    tidygraph::activate(edges) %>%
     tidygraph::as_tibble() %>%
     dplyr::select(from, to) %>%
     dplyr::mutate(edge = 1)
@@ -92,10 +96,14 @@ convert_graph_to_adjlist <- function(input, relation_value_col) {
   }
 
   # Create a dataframe with all possible pairwise relations
-  n_nodes <- igraph::vcount(input)
+  n_nodes <- input %>%
+    tidygraph::activate(nodes) %>%
+    tidygraph::as_tibble() %>%
+    nrow()
+
   output <- tidyr::expand_grid(
     from = 1:n_nodes,
-    to = 1:n_nodes
+    to = from
   ) %>%
     # Add info about what edges exist in the network
     dplyr::left_join(edgelist, by = c("from", "to")) %>%
@@ -137,24 +145,25 @@ convert_adjlist_to_matrix <- function(input, relation_value_col) {
     stop("Your relation value column contains non-numbers.")
   }
 
-  n_nodes <- with(input, max(from, to))
+  n_nodes <- with(input, length(unique(c(from, to))))
+  # n_nodes <- with(input, max(from, to))
   if (nrow(input) != n_nodes*(n_nodes-1) + n_nodes) {
-    # adjlist MUST include identity (from == to)
+    # NOTE: adjlist MUST include identity (from == to)
     stop("You have the wrong number of observations in your adjlist.")
   }
 
-  return (
-    input %>%
-      dplyr::select(from, to, {{relation_value_col}}) %>%
-      dplyr::arrange(from, to) %>%
-      tidyr::pivot_wider(
-        names_from = to,
-        values_from = {{relation_value_col}}
-      ) %>%
-      dplyr::select(-from) %>%
-      as.matrix() %>%
-      unname()
-  )
+  output <- input %>%
+    dplyr::select(from, to, {{relation_value_col}}) %>%
+    dplyr::arrange(from, to) %>%
+    tidyr::pivot_wider(
+      names_from = to,
+      values_from = {{relation_value_col}}
+    ) %>%
+    dplyr::select(-from) %>%
+    as.matrix() %>%
+    unname()
+
+  return (output)
 }
 
 #' @export
@@ -165,18 +174,18 @@ convert_matrix_to_adjlist <- function(input, relation_value_col) {
     stop("Input is not a matrix.")
   }
 
-  return (
-    input %>%
-      as.data.frame() %>%
-      dplyr::mutate(from = dplyr::row_number()) %>%
-      tidyr::pivot_longer(
-        cols = -from,
-        names_to = "to",
-        values_to = user_col_to_string({{relation_value_col}})
-      ) %>%
-      dplyr::mutate(
-        to = stringr::str_remove(to, "V"),
-        to = as.numeric(to)
-      )
-  )
+  output <- input %>%
+    as.data.frame() %>%
+    dplyr::mutate(from = dplyr::row_number()) %>%
+    tidyr::pivot_longer(
+      cols = -from,
+      names_to = "to",
+      values_to = user_col_to_string({{relation_value_col}})
+    ) %>%
+    dplyr::mutate(
+      to = sub("^V", "", to),
+      to = as.numeric(to)
+    )
+
+  return (output)
 }

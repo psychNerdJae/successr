@@ -42,7 +42,7 @@ Okay, what about that weird stuff in the middle of $\delta$? That is where the m
 Therefore, with greater values of $\gamma$, the representation has a longer "lookahead" horizon, [as illustrated here](https://bair.berkeley.edu/blog/2021/01/05/successor/).
 
 This means that if we know $\gamma$, we know exactly how many lookahead steps the SR is taking into the future, using the formula: $lookahead = \frac{1}{1 - \gamma}$. We'll note that the lookahead horizon does not increase linearly with $\gamma$.
-
+ 
 ```{r}
 tibble(gamma = seq(0, 0.9, 0.1)) %>%
   mutate(lookahead = translate_gamma_to_lookahead(gamma)) %>%
@@ -67,12 +67,12 @@ Let's illustrate using a real network:
 
 ```{r}
 # Load network
-karate_network <- karate %>%
+karate_network <- karate_named %>%
   tbl_graph(edges = ., directed = FALSE)
 
 # Simulate random walk through network (observations)
 karate_walk <- karate_network %>%
-  generate_random_walk(n_obs = 5000)
+  simulate_walk(n_obs = 5000)
 
 # Learn successor values using many parameter values
 karate_successor <- karate_network %>%

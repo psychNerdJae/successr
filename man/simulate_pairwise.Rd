@@ -2,19 +2,18 @@
 % Please edit documentation in R/simulate.R
 \name{simulate_pairwise}
 \alias{simulate_pairwise}
-\alias{simulate_random_walk}
+\alias{simulate_walk}
 \title{Simulate observations from a network}
 \usage{
 simulate_pairwise(input, n_reps, relation_value_col = NULL)
 
-simulate_random_walk(input, n_obs, start_here = NULL)
+simulate_walk(input, n_obs, start_here = NULL)
 }
 \arguments{
 \item{input}{For `simulate_pairwise`, this can be formatted either as a
-`tidygraph::tbl_graph`, OR an adjlist. For `simulate_random_walk`, you can
-only use `tidygraph::tbl_graph`. This function will not work with other kinds
-of network representations, e.g. from `igraph`. Make sure that your input
-graph is either directed or undirected, as you'd like it.}
+`tidygraph::tbl_graph`, OR an adjlist. For `simulate_walk`, you can only
+use `igraph` or `tidygraph::tbl_graph` graphs representations. Make sure
+your input graph is either directed or undirected, as you'd like it.}
 
 \item{n_reps}{Number of repetitions.}
 
@@ -28,7 +27,7 @@ adjacency representation, this might be zeroes (not friends) and ones
 \description{
 `simulate_pairwise`: Generate N pairwise observations of each relationship,
 like in a (balanced) laboratory experiment.
-`simulate_random_walk`: Generate a random walk of N length.
+`simulate_walk`: Generate a random walk of N length.
 }
 \examples{
 karate_graph <- tidygraph::tbl_graph(edges = successr::karate, directed = F)
